@@ -47,29 +47,42 @@ static void sort_auto_loot(ostream& os, istream& is)
 	}
 }
 
+static bool is_lootfile(istream& is)
+{
+	string first_line;
+	is.seekg(0, is.beg);
+	getline(is, first_line);
+	is.seekg(0, is.beg);
+	return (!is.bad() && first_line == "[Settings]");
+}
+
 /// <summary>Sort the loot sections in the MQ2AutoLoot ini file</summary>
 /// <param name="lootfile">Name of the MQ2AutoLoot ini file to be sorted</param>
 /// <param name="report">Pointer to a function that will be called for reporting. Maybe nullptr.</param>
 /// <returns>0: OK, 1: can't open lootfile, 2: can't open tempfile, 3: problem with tempfile during sort</returns>
 int sort_auto_loot(const string& lootfile, void(*report)(const string&))
 {
-	const string tempfile(lootfile + ".sav");
 	ifstream is;
 	is.open(lootfile);
 	if (!is.is_open()) {
 		if (report) report("Can't open input: " + lootfile);
 		return (1);
 	}
+	if (!is_lootfile(is)) {
+		if (report) report("This isn't a lootfile: " + lootfile);
+		return (2);
+	}
+	const string tempfile(lootfile + ".sav");
 	ofstream os;
 	os.open(tempfile, ios_base::out | ios_base::trunc);
 	if (!os.is_open()) {
 		if (report) report("Can't open output: " + tempfile);
-		return (2);
+		return (3);
 	}
 	sort_auto_loot(os, is);
 	if (os.bad()) {
 		if (report) report("Sort failed");
-		return (3);
+		return (4);
 	}
 	is.close();
 	os.close();

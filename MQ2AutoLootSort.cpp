@@ -2,8 +2,19 @@
 #include <iostream>
 #include "LootSort.h"
 
-int main()
+static void report_progress(const std::string& msg)
 {
-	return(sort_auto_loot(std::string("Loot.ini"),
-							[](auto msg) {std::cerr << msg << '\n'; }));
+	std::cerr << msg << '\n';
+}
+
+int main(int argc, char** argv)
+{
+	if (argc == 1)
+		return(sort_auto_loot(std::string("Loot.ini"), report_progress));
+	for (auto index = 1; index < argc; ++index)
+	{
+		auto error = sort_auto_loot(std::string(argv[index]), report_progress);
+		if (error) return error;
+	}
+	return 0;
 }
