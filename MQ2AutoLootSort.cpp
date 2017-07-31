@@ -9,7 +9,7 @@ static void report_progress(const std::string& msg)
 
 int main(int argc, char** argv)
 {
-	if (argc == 1)
+	if (argc <= 1)
 		return(sort_auto_loot(std::string("Loot.ini"), report_progress));
 	for (auto index = 1; index < argc; ++index)
 	{
