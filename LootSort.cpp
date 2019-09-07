@@ -1,5 +1,3 @@
-#include <istream>
-#include <ostream>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -8,14 +6,12 @@
 #include <filesystem>
 #include "LootSort.h"
 
-using namespace std;
+typedef std:: vector<std::string> Section;
 
-typedef vector<string> Section;
-
-static void read_section(Section& section, istream& is)
+static void read_section(Section& section, std::istream& is)
 {
 	section.clear();
-	string line;
+	std::string line;
 	while (getline(is, line)) {		
 		section.push_back(line);
 		if (is.peek() == '[') break; // is next line a new section
@@ -34,22 +30,22 @@ static void sort_section_if_needed(Section& section)
 	sort(begin, section.end());
 }
 
-static void sort_auto_loot(ostream& os, istream& is)
+static void sort_auto_loot(std::ostream& os, std::istream& is)
 {
 	while (!is.eof()) {
 		Section section;
 		read_section(section, is);
 		sort_section_if_needed(section);
-		for (const string& line : section) {
+		for (const std::string& line : section) {
 			os << line << '\n';
 			if (os.bad()) return;
 		}
 	}
 }
 
-static bool is_lootfile(istream& is)
+static bool is_lootfile(std::istream& is)
 {
-	string first_line;
+	std::string first_line;
 	is.seekg(0, is.beg);
 	getline(is, first_line);
 	is.seekg(0, is.beg);
@@ -60,9 +56,9 @@ static bool is_lootfile(istream& is)
 /// <param name="lootfile">Name of the MQ2AutoLoot ini file to be sorted</param>
 /// <param name="report">Pointer to a function that will be called for reporting. Maybe nullptr.</param>
 /// <returns>0: OK, 1: can't open lootfile, 2: can't open tempfile, 3: problem with tempfile during sort</returns>
-int sort_auto_loot(const string& lootfile, void(*report)(const string&))
+int sort_auto_loot(const std::string& lootfile, void(*report)(const std::string&))
 {
-	ifstream is;
+	std::ifstream is;
 	is.open(lootfile);
 	if (!is.is_open()) {
 		if (report) report("Can't open input: " + lootfile);
@@ -72,9 +68,9 @@ int sort_auto_loot(const string& lootfile, void(*report)(const string&))
 		if (report) report("This isn't a lootfile: " + lootfile);
 		return (2);
 	}
-	const string tempfile(lootfile + ".sav");
-	ofstream os;
-	os.open(tempfile, ios_base::out | ios_base::trunc);
+	const std::string tempfile(lootfile + ".sav");
+	std::ofstream os;
+	os.open(tempfile, std::ios_base::out | std::ios_base::trunc);
 	if (!os.is_open()) {
 		if (report) report("Can't open output: " + tempfile);
 		return (3);
@@ -86,7 +82,7 @@ int sort_auto_loot(const string& lootfile, void(*report)(const string&))
 	}
 	is.close();
 	os.close();
-	const string tempfile2(lootfile + ".sav2");
+	const std::string tempfile2(lootfile + ".sav2");
 	// swap tempfile, lootfile
 	using namespace std::experimental::filesystem;
 	rename(tempfile, tempfile2);
