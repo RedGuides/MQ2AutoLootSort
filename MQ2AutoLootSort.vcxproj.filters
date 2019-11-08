@@ -23,6 +23,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MQ2AutoLootSort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="LootSort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
