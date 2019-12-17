@@ -84,10 +84,9 @@ int sort_auto_loot(const std::string& lootfile, void(*report)(const std::string&
 	os.close();
 	const std::string tempfile2(lootfile + ".sav2");
 	// swap tempfile, lootfile
-	using namespace std::experimental::filesystem;
-	rename(tempfile, tempfile2);
-	rename(lootfile, tempfile);
-	rename(tempfile2, lootfile);
+	std::filesystem::rename(tempfile, tempfile2);
+	std::filesystem::rename(lootfile, tempfile);
+	std::filesystem::rename(tempfile2, lootfile);
 	if (report) report("Sorted: " + lootfile);
 	return(0);
 }
