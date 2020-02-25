@@ -1,26 +1,18 @@
-#include <istream>
-#include <ostream>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
-
-// Original author leveraged rename from the experimental filesystem lib. This lib is no longer experimental in C++17
-// and VS2019 will throw an error unless the below deprecation warning is defined. Must be defined prior to the #include.
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
-#include <experimental/filesystem>
-
-
+#include <filesystem>
 #include "LootSort.h"
 
-typedef std::vector<std::string> Section;
+typedef std:: vector<std::string> Section;
 
 static void read_section(Section& section, std::istream& is)
 {
 	section.clear();
 	std::string line;
-	while (getline(is, line)) {		
+	while (getline(is, line)) {
 		section.push_back(line);
 		if (is.peek() == '[') break; // is next line a new section
 	}
@@ -55,7 +47,7 @@ static bool is_lootfile(std::istream& is)
 {
 	std::string first_line;
 	is.seekg(0, is.beg);
-	std::getline(is, first_line);
+	getline(is, first_line);
 	is.seekg(0, is.beg);
 	return (!is.bad() && first_line == "[Settings]");
 }
@@ -91,16 +83,10 @@ int sort_auto_loot(const std::string& lootfile, void(*report)(const std::string&
 	is.close();
 	os.close();
 	const std::string tempfile2(lootfile + ".sav2");
-	
-
-	// Pre-C++17: experimental::filesystem::rename(const path& old_p, const path& new_p)
-	// Post-C++17: filesystem::rename(const std::filesystem::path& old_p, const std::filesystem::path& new_p, std::error_code& ec) noexcept;
-	// Post-C++17 _should_ implicitely convert std::string to paths.
-	
 	// swap tempfile, lootfile
-	std::experimental::filesystem::rename(tempfile, tempfile2);
-	std::experimental::filesystem::rename(lootfile, tempfile);
-	std::experimental::filesystem::rename(tempfile2, lootfile);
+	std::filesystem::rename(tempfile, tempfile2);
+	std::filesystem::rename(lootfile, tempfile);
+	std::filesystem::rename(tempfile2, lootfile);
 	if (report) report("Sorted: " + lootfile);
 	return(0);
 }
