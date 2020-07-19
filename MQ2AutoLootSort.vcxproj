@@ -41,13 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\Release\Macros\</OutDir>
-    <IntDir>.\Intermediate\Release\</IntDir>
+    <OutDir>$(MQ2BuildDirectory)bin\$(MQ2BinaryDirName)\</OutDir>
+    <IntDir>$(MQ2BuildDirectory)obj\$(MQ2BinaryDirName)\$(ProjectName)\</IntDir>
     <TargetName>LootSort</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\Debug\Macros\</OutDir>
-    <IntDir>.\Intermediate\Debug\</IntDir>
+    <OutDir>$(MQ2BuildDirectory)bin\$(MQ2BinaryDirName)\</OutDir>
+    <IntDir>$(MQ2BuildDirectory)obj\$(MQ2BinaryDirName)\$(ProjectName)\</IntDir>
     <TargetName>LootSort</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
